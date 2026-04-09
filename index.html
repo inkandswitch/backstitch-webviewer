@@ -3,20 +3,68 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-		<meta name="theme-color" content="#202531">
+		<meta name="theme-color" content="#1c1825">
 		<link rel="icon" type="image/png" href="favicon.png">
-		<title>Patchwork Viewer</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Zilla+Slab:wght@300;400;600&display=swap" rel="stylesheet">
+		<title>Backstitch Webviewer</title>
 		<style>
 body {
 	margin: 0;
-	background: #333b4f;
+	background: #1c1825;
 	overflow: hidden;
 	touch-action: none;
-	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-family: 'PT Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
+	color: #d4d4d4;
+}
+
+.background-decoration {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+	overflow: hidden;
+	z-index: 0;
+}
+
+.background-decoration svg {
+	position: absolute;
+	fill: none;
+	stroke: #78350f;
+	stroke-width: 2px;
+	stroke-linecap: round;
+	stroke-dasharray: 0 0 12 12;
+	animation: dashMove 8s linear infinite;
+}
+
+.background-decoration .left-spiral {
+	top: -10%;
+	left: -15%;
+	width: 50%;
+	height: auto;
+	opacity: 0.4;
+}
+
+.background-decoration .right-spiral {
+	top: 30%;
+	right: -20%;
+	width: 60%;
+	height: auto;
+	opacity: 0.3;
+	transform: rotate(180deg);
+}
+
+@keyframes dashMove {
+	to {
+		stroke-dashoffset: -24;
+	}
 }
 
 #loading {
@@ -26,17 +74,18 @@ body {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	color: #e0e0e0;
+	color: #d4d4d4;
 	gap: 1rem;
 	z-index: 10;
 }
 
-#loading img {
-	width: auto;
-	height: auto;
-	max-width: min(85%, 50vh);
-	max-height: 180px;
+#loading .logo-text {
+	font-family: 'Zilla Slab', serif;
+	font-size: 2.5rem;
+	font-weight: 600;
+	color: #d4d4d4;
 	margin-bottom: 1rem;
+	text-align: center;
 }
 
 #status-text {
@@ -44,13 +93,13 @@ body {
 }
 
 #error-text {
-	color: #ff6b6b;
+	color: #fbbf24;
 	font-size: 1.1rem;
 	max-width: 30rem;
 	text-align: left;
 	line-height: 1.6;
-	background: rgba(255, 107, 107, 0.1);
-	border: 1px solid rgba(255, 107, 107, 0.25);
+	background: rgba(245, 158, 11, 0.1);
+	border: 1px solid rgba(245, 158, 11, 0.25);
 	border-radius: 0.5rem;
 	padding: 1rem 1.5rem;
 }
@@ -59,13 +108,13 @@ body {
 	margin: 0.5rem 0 0;
 	padding-left: 1.25rem;
 	font-size: 0.95rem;
-	color: #e0e0e0;
+	color: #d4d4d4;
 }
 
 #progress-bar {
 	width: min(320px, 70vw);
 	height: 6px;
-	background: #262c3b;
+	background: #13111a;
 	border-radius: 3px;
 	overflow: hidden;
 }
@@ -73,7 +122,7 @@ body {
 #progress-bar-inner {
 	height: 100%;
 	width: 0%;
-	background: #699ce8;
+	background: #f59e0b;
 	border-radius: 3px;
 	transition: width 0.3s ease;
 }
@@ -106,7 +155,7 @@ canvas:focus {
 	left: 0;
 	right: 0;
 	z-index: 20;
-	background: #1e2330;
+	background: #13111a;
 	padding: 0.5rem 1rem;
 	justify-content: flex-start;
 	align-items: center;
@@ -114,53 +163,55 @@ canvas:focus {
 }
 
 #top-bar label {
-	color: #e0e0e0;
+	color: #d4d4d4;
 	font-size: 0.85rem;
 	opacity: 0.7;
 }
 
 #top-bar select {
 	appearance: none;
-	background: #262c3b;
-	color: #e0e0e0;
-	border: 1px solid rgba(105, 156, 232, 0.3);
-	border-radius: 0.375rem;
+	background: #1c1825;
+	color: #d4d4d4;
+	border: 2px solid rgba(212, 212, 212, 0.15);
+	border-radius: 0.5rem;
 	padding: 0.4rem 2rem 0.4rem 0.75rem;
 	font-size: 0.85rem;
 	font-family: inherit;
 	cursor: pointer;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e0e0e0' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4d4d4' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	background-position: right 0.5rem center;
+	transition: all 0.1s;
 }
 
 #top-bar select:hover {
-	border-color: rgba(105, 156, 232, 0.6);
+	border-color: rgba(212, 212, 212, 0.3);
 }
 
 #top-bar select:focus {
 	outline: none;
-	border-color: #699ce8;
+	border-color: rgba(245, 158, 11, 0.5);
 }
 
 #branch-download {
-	background: #262c3b;
-	color: #e0e0e0;
-	border: 1px solid rgba(105, 156, 232, 0.3);
-	border-radius: 0.375rem;
+	background: #1c1825;
+	color: #f59e0b;
+	border: 2px solid #f59e0b;
+	border-radius: 0.5rem;
 	padding: 0.4rem 0.75rem;
 	font-size: 0.85rem;
+	font-weight: 600;
 	font-family: inherit;
 	cursor: pointer;
+	transition: all 0.1s;
 }
 
 #branch-download:hover:not(:disabled) {
-	border-color: rgba(105, 156, 232, 0.6);
+	border-style: dashed;
 }
 
 #branch-download:focus {
 	outline: none;
-	border-color: #699ce8;
 }
 
 #branch-download:disabled {
@@ -175,17 +226,18 @@ canvas:focus {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	color: #e0e0e0;
+	color: #d4d4d4;
 	gap: 1rem;
 	z-index: 10;
 }
 
-#empty-state img {
-	width: auto;
-	height: auto;
-	max-width: min(85%, 50vh);
-	max-height: 180px;
+#empty-state .logo-text {
+	font-family: 'Zilla Slab', serif;
+	font-size: 2.5rem;
+	font-weight: 600;
+	color: #d4d4d4;
 	margin-bottom: 1rem;
+	text-align: center;
 }
 
 #empty-state h2 {
@@ -193,14 +245,17 @@ canvas:focus {
 	font-size: 1.1rem;
 	font-weight: 400;
 	opacity: 0.6;
+	width: 90vw;
+	max-width: 30rem;
+	text-align: left;
 }
 
 #branch-list {
 	max-width: 30rem;
 	width: 90vw;
-	background: rgba(105, 156, 232, 0.08);
-	border: 1px solid rgba(105, 156, 232, 0.2);
-	border-radius: 0.5rem;
+	background: transparent;
+	border: 2px dashed #f59e0b;
+	border-radius: 0.75rem;
 	padding: 0.5rem 0;
 	list-style: none;
 	margin: 0;
@@ -209,14 +264,14 @@ canvas:focus {
 #branch-list li a {
 	display: block;
 	padding: 0.5rem 1.25rem;
-	color: #699ce8;
+	color: #f59e0b;
 	text-decoration: none;
 	font-size: 0.95rem;
 	transition: background 0.15s;
 }
 
 #branch-list li a:hover {
-	background: rgba(105, 156, 232, 0.12);
+	background: rgba(245, 158, 11, 0.1);
 }
 
 #branch-list li a .branch-author {
@@ -231,17 +286,18 @@ canvas:focus {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	color: #e0e0e0;
+	color: #d4d4d4;
 	gap: 1rem;
 	z-index: 10;
 }
 
-#project-prompt img {
-	width: auto;
-	height: auto;
-	max-width: min(85%, 50vh);
-	max-height: 180px;
+#project-prompt .logo-text {
+	font-family: 'Zilla Slab', serif;
+	font-size: 2.5rem;
+	font-weight: 600;
+	color: #d4d4d4;
 	margin-bottom: 1rem;
+	text-align: center;
 }
 
 #project-prompt h2 {
@@ -249,6 +305,9 @@ canvas:focus {
 	font-size: 1.1rem;
 	font-weight: 400;
 	opacity: 0.6;
+	width: 90vw;
+	max-width: 30rem;
+	text-align: left;
 }
 
 #project-form {
@@ -260,51 +319,78 @@ canvas:focus {
 
 #project-form input {
 	flex: 1;
-	background: #262c3b;
-	color: #e0e0e0;
-	border: 1px solid rgba(105, 156, 232, 0.3);
-	border-radius: 0.375rem;
+	background: #13111a;
+	color: #d4d4d4;
+	border: 2px solid rgba(212, 212, 212, 0.15);
+	border-radius: 0.5rem;
 	padding: 0.5rem 0.75rem;
 	font-size: 0.95rem;
 	font-family: inherit;
+	transition: border-color 0.1s;
 }
 
 #project-form input::placeholder {
-	color: rgba(224, 224, 224, 0.35);
+	color: rgba(212, 212, 212, 0.35);
 }
 
 #project-form input:focus {
 	outline: none;
-	border-color: #699ce8;
+	border-color: rgba(245, 158, 11, 0.5);
 }
 
 #project-form button {
-	background: #699ce8;
-	color: #fff;
-	border: none;
-	border-radius: 0.375rem;
+	background: #1c1825;
+	color: #f59e0b;
+	border: 2px solid #f59e0b;
+	border-radius: 0.5rem;
 	padding: 0.5rem 1.25rem;
 	font-size: 0.95rem;
+	font-weight: 600;
 	font-family: inherit;
 	cursor: pointer;
 	white-space: nowrap;
+	transition: all 0.1s;
 }
 
 #project-form button:hover {
-	background: #5a8ad4;
+	border-style: dashed;
 }
 		</style>
 	</head>
 	<body>
+		<div class="background-decoration">
+			<svg class="left-spiral" viewBox="0 0 527 1052" xmlns="http://www.w3.org/2000/svg">
+				<circle cx="345" cy="182" r="137" />
+				<circle cx="345" cy="182" r="94" />
+				<path d="M1,504c0,2,.03,4,.1,6" />
+				<path d="M1.88,522c9,91.4,86.1,163,180,163,99.9,0,181-81,181-181,0-67.7-37-127-92-158-62.5-28.5-106-91.6-106-165C165,82,246,1,346,1s174,74.6,180,169" />
+				<circle cx="182" cy="505" r="137" />
+				<path d="M363,1051c-2,0-4-.03-6-.1" />
+				<path d="M345,1050c-91.4-9-163-86.1-163-180,0-71.6,42.6-132,103-161,73.5-37.8,125-112,125-201,0-40.2-10.4-78-28.7-111" />
+				<circle cx="363" cy="870" r="137" />
+				<circle cx="363" cy="870" r="94" />
+			</svg>
+			<svg class="right-spiral" viewBox="0 0 527 1052" xmlns="http://www.w3.org/2000/svg">
+				<circle cx="345" cy="182" r="137" />
+				<circle cx="345" cy="182" r="94" />
+				<path d="M1,504c0,2,.03,4,.1,6" />
+				<path d="M1.88,522c9,91.4,86.1,163,180,163,99.9,0,181-81,181-181,0-67.7-37-127-92-158-62.5-28.5-106-91.6-106-165C165,82,246,1,346,1s174,74.6,180,169" />
+				<circle cx="182" cy="505" r="137" />
+				<path d="M363,1051c-2,0-4-.03-6-.1" />
+				<path d="M345,1050c-91.4-9-163-86.1-163-180,0-71.6,42.6-132,103-161,73.5-37.8,125-112,125-201,0-40.2-10.4-78-28.7-111" />
+				<circle cx="363" cy="870" r="137" />
+				<circle cx="363" cy="870" r="94" />
+			</svg>
+		</div>
 		<div id="loading">
-			<img src="logo.svg" alt="Godot Engine logo">
+			<div class="logo-text">Backstitch Webviewer</div>
 			<div id="progress-bar"><div id="progress-bar-inner"></div></div>
 			<div id="status-text">Loading…</div>
 			<div id="error-text" style="display: none;"></div>
 		</div>
 		<div id="top-bar"><label for="branch-select">Branch</label><select id="branch-select"></select><button id="branch-download" type="button">Download zip</button></div>
 		<div id="project-prompt" style="display: none;">
-			<img src="logo.svg" alt="Godot Engine logo">
+			<div class="logo-text">Backstitch Webviewer</div>
 			<h2>Enter a project ID to get started</h2>
 			<form id="project-form">
 				<input type="text" id="project-input" placeholder="Paste project ID…" autocomplete="off" autofocus>
@@ -312,7 +398,7 @@ canvas:focus {
 			</form>
 		</div>
 		<div id="empty-state">
-			<img src="logo.svg" alt="Godot Engine logo">
+			<div class="logo-text">Backstitch Webviewer</div>
 			<h2>Select a branch to view</h2>
 			<ul id="branch-list"></ul>
 		</div>
