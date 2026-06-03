@@ -14,3 +14,8 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/lorejam-api/*"
+  to = "http://lorejam.backstitch.dev:3000/:splat"
+  status = 200
+  force = true

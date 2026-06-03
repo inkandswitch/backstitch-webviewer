@@ -12,6 +12,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/lorejam-api": {
+        target: "http://lorejam.backstitch.dev:3000",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/lorejam-api/, ""),
+      },
     },
   },
   test: {

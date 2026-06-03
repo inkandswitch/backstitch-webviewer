@@ -3,6 +3,7 @@ console.log("[patchwork] module loaded");
 import { getProjectMetadata, getBranchFiles, zipBranchFiles } from "./automerge_getter";
 import { createIDBFSAccessor, IDBFSEntry } from "./idbfs_accessor";
 
+const api = new URLSearchParams(window.location.search).get("api") == "lorejam" ? "lorejam-api" : "api";
 
 class EngineError extends Error {
   public exitCode: number;
@@ -90,7 +91,7 @@ async function showError(error: Error | ImportError | GameError | string) {
   try {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 5000);
-    const res = await fetch("/api/", { signal: controller.signal });
+    const res = await fetch(`/${api}/`, { signal: controller.signal });
     serverReachable = res.ok;
   } catch {}
 

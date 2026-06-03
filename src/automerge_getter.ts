@@ -1,11 +1,11 @@
 import { serializeGodotSceneAsUint8Array } from "./godot_serializer";
 // import zip library
 import JSZip from "jszip";
-const DOC_FETCH_URL = `/api/doc/[docId]`;
+const DOC_FETCH_URL = `/[api]/doc/[docId]`;
 const TIMEOUT = 60000;
 
-export async function getDoc(docId: string): Promise<any> {
-  const url = DOC_FETCH_URL.replace("[docId]", docId);
+export async function getDoc(docId: string, api: string): Promise<any> {
+  const url = DOC_FETCH_URL.replace("[docId]", docId).replace("[api]", api);
   console.log(`[getDoc] fetching ${url}`);
   try {
     const controller = new AbortController();
@@ -91,8 +91,8 @@ export async function getBranchFiles(branchId: string, onProgress?: (current: nu
 }
 
 // array of strings
-export async function getLastHeads(docId: string): Promise<string[] | null> {
-  const url = `/api/last_heads/${docId}`;
+export async function getLastHeads(docId: string, api: string): Promise<string[] | null> {
+  const url = `/${api}/last_heads/${docId}`;
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT);
