@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '4.6.1.stable.official';
+const CACHE_VERSION = '4.7.1.stable.official';
 /** @type {string} */
 const CACHE_PREFIX = 'GodotEngine-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
@@ -14,7 +14,7 @@ const OFFLINE_URL = 'offline.html';
 const ENSURE_CROSSORIGIN_ISOLATION_HEADERS = true;
 // Files that will be cached on load.
 /** @type {string[]} */
-const CACHED_FILES = ["godot.editor.html", "offline.html", "godot.editor.js", "godot.editor.audio.worklet.js", "godot.editor.audio.position.worklet.js", "logo.svg", "favicon.png"];
+const CACHED_FILES = ["godot.editor.html", "offline.html", "godot.editor.js", "godot.editor.audio.worklet.js", "godot.editor.audio.position.worklet.js", "logo.svg", "favicon.png", "inter-regular.woff2", "inter-bold.woff2"];
 // Files that we might not want the user to preload, and will only be cached on first load.
 /** @type {string[]} */
 const CACHEABLE_FILES = ["godot.editor.wasm"];
