@@ -1,11 +1,16 @@
 import { serializeGodotSceneAsUint8Array } from "./godot_serializer";
+import { apiUrl, pathJoin } from './globals'
+
 // import zip library
 import JSZip from "jszip";
-const DOC_FETCH_URL = `/api/doc/[docId]`;
 const TIMEOUT = 60000;
 
+function docUrl(doc: string): string {
+  return pathJoin([apiUrl, `/doc/${doc}`])
+}
+
 export async function getDoc(docId: string): Promise<any> {
-  const url = DOC_FETCH_URL.replace("[docId]", docId);
+  const url = docUrl(docId);
   console.log(`[getDoc] fetching ${url}`);
   try {
     const controller = new AbortController();
@@ -92,7 +97,7 @@ export async function getBranchFiles(branchId: string, onProgress?: (current: nu
 
 // array of strings
 export async function getLastHeads(docId: string): Promise<string[] | null> {
-  const url = `/api/last_heads/${docId}`;
+  const url = `${apiUrl}/last_heads/${docId}`;
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT);

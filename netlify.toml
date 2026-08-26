@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "VITE_BACKSTITCH_API_URL=\"/api\" npm run build"
   publish = "dist"
 
 [[headers]]
