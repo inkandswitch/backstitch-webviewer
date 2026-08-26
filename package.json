@@ -1,17 +1,18 @@
 {
-  "name": "thingy",
+  "name": "Backstitch Webviewer",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:idbfs": "vitest run test/idbfs_accessor.test.ts"
+    "test": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest run",
+    "test:watch": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest",
+    "test:idbfs": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest run test/idbfs_accessor.test.ts"
   },
   "dependencies": {
+    "cross-env": "^10.1.0",
     "idb": "^8.0.3",
     "jszip": "^3.10.1"
   },
