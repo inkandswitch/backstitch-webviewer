@@ -1,12 +1,12 @@
 import { serializeGodotSceneAsUint8Array } from "./godot_serializer";
-import { apiUrl, pathJoin } from './globals'
+import { apiUrl, pathJoin } from "./globals";
 
 // import zip library
 import JSZip from "jszip";
 const TIMEOUT = 60000;
 
 function docUrl(doc: string): string {
-  return pathJoin([apiUrl, `/doc/${doc}`])
+  return pathJoin([apiUrl, `/doc/${doc}`]);
 }
 
 export async function getDoc(docId: string): Promise<any> {
@@ -33,7 +33,10 @@ export async function getProjectMetadata(projectId: string): Promise<any> {
   return metadata;
 }
 
-export async function getBranchFiles(branchId: string, onProgress?: (current: number, total: number) => void): Promise<Map<string, Uint8Array>> {
+export async function getBranchFiles(
+  branchId: string,
+  onProgress?: (current: number, total: number) => void,
+): Promise<Map<string, Uint8Array>> {
   var map = new Map<string, Uint8Array>();
 
   console.log(`[getBranchFiles] fetching branch doc ${branchId}`);
@@ -118,7 +121,9 @@ export async function getBranchFilesAsZip(branchId: string): Promise<ArrayBuffer
   return await zipBranchFiles(map);
 }
 
-export async function zipBranchFiles(map: Map<string, Uint8Array<ArrayBufferLike>>): Promise<ArrayBuffer> {
+export async function zipBranchFiles(
+  map: Map<string, Uint8Array<ArrayBufferLike>>,
+): Promise<ArrayBuffer> {
   var zip = new JSZip();
   for (const [filename, content] of map.entries()) {
     zip.file(filename.replace("res://", ""), content);

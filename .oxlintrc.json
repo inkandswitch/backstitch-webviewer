@@ -1,0 +1,11 @@
+{
+  "ignorePatterns": [
+    "dist/**",
+    "*.min.js",
+    "public/godot.*",
+    "public/service.worker.js",
+    "public/offline.html",
+    "public/manifest.json",
+    "types/godot/*"
+  ]
+}

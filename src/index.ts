@@ -1,9 +1,9 @@
 console.log("[patchwork] module loaded");
 
 import { getProjectMetadata, getBranchFiles, zipBranchFiles } from "./automerge_getter";
-import { createIDBFSAccessor, IDBFSEntry } from "./idbfs_accessor";
+import { createIDBFSAccessor } from "./idbfs_accessor";
 import { encodeShareToken, decodeShareToken } from "./share_link";
-import { apiUrl } from './globals'
+import { apiUrl } from "./globals";
 
 class EngineError extends Error {
   public exitCode: number;
@@ -15,11 +15,9 @@ class EngineError extends Error {
   }
 }
 
-class ImportError extends EngineError {
-}
+class ImportError extends EngineError {}
 
-class GameError extends EngineError {
-}
+class GameError extends EngineError {}
 
 const loading = document.getElementById("loading")!;
 const statusText = document.getElementById("status-text")!;
@@ -42,7 +40,7 @@ function setIndeterminate() {
 }
 
 function filterErrorLog(errorLog: string[]): string[] {
-  return errorLog.filter(line => !line.includes("leaked at exit") && !line.includes("WARNING:"));
+  return errorLog.filter((line) => !line.includes("leaked at exit") && !line.includes("WARNING:"));
 }
 
 async function showError(error: Error | ImportError | GameError | string) {
@@ -77,7 +75,7 @@ async function showError(error: Error | ImportError | GameError | string) {
     errorLog = filterErrorLog(errorLog);
     // only show the last 10 lines
     errorLog = errorLog.slice(-10);
-    errorLog.forEach(line => {
+    errorLog.forEach((line) => {
       errorText.innerHTML += `<li>${line}</li>`;
     });
   }
@@ -219,9 +217,7 @@ function setupBranchPicker(metadata: any, activeBranchId: string) {
   for (const branch of branches) {
     const option = document.createElement("option");
     option.value = branch.id;
-    option.textContent = branch.created_by
-      ? `${branch.name} (${branch.created_by})`
-      : branch.name;
+    option.textContent = branch.created_by ? `${branch.name} (${branch.created_by})` : branch.name;
     if (branch.id === activeBranchId) option.selected = true;
     branchSelect.appendChild(option);
   }
@@ -295,17 +291,6 @@ async function downloadZip(branchLabel: string, files: Map<string, Uint8Array>):
   const safeProjectId = sanitizeFilePart(projectId || "project") || "project";
   const safeBranchLabel = sanitizeFilePart(branchLabel) || "branch";
   triggerDownload(zipBuffer, `project-${safeProjectId}-${safeBranchLabel}.zip`);
-}
-
-function entriesToMap(entries: Record<string, IDBFSEntry>): Map<string, Uint8Array> {
-  const map = new Map<string, Uint8Array>();
-  for (const [path, entry] of Object.entries(entries)) {
-    if (!entry.contents) {
-      continue;
-    }
-    map.set(path, new Uint8Array(entry.contents));
-  }
-  return map;
 }
 
 async function launch() {
@@ -412,45 +397,66 @@ async function launch() {
       emscriptenPoolSize: concurrency,
       godotPoolSize: Math.floor(concurrency / 3),
       onExit: done,
-      onPrintError: addToErrorLog
+      onPrintError: addToErrorLog,
     });
 
     console.log("Initializing import editor...");
 
-    importEngine.init("godot.editor").then(() => {
-      console.log("Editor initalized!");
-      for (const [filename, content] of files.entries()) {
-        importEngine.copyToFS(`${PROJECT_PATH}/${filename.replace("res://", "")}`, content.buffer as ArrayBuffer);
-      }
-      console.log(`[patchwork] copied ${files.size} files to engine FS`);
-      setTimeout(() => {
-        if (resolved) return;
-        // Never start the game engine while the import editor is still
-        // running: the Engine wrapper shares module state across instances,
-        // and overlapping runtimes leave the game engine uninitialized.
-        console.warn(`[patchwork] import pass timed out after ${IMPORT_TIMEOUT_MS / 1000}s, asking editor to quit`);
-        try {
-          importEngine.requestQuit();
-        } catch (error) {
-          console.warn("[patchwork] requestQuit failed:", error);
+    importEngine
+      .init("godot.editor")
+      .then(() => {
+        console.log("Editor initalized!");
+        for (const [filename, content] of files.entries()) {
+          importEngine.copyToFS(
+            `${PROJECT_PATH}/${filename.replace("res://", "")}`,
+            content.buffer as ArrayBuffer,
+          );
         }
+        console.log(`[patchwork] copied ${files.size} files to engine FS`);
         setTimeout(() => {
-          if (!resolved) {
-            console.warn("[patchwork] import editor did not exit after quit request, proceeding anyway");
-            done(0);
+          if (resolved) return;
+          // Never start the game engine while the import editor is still
+          // running: the Engine wrapper shares module state across instances,
+          // and overlapping runtimes leave the game engine uninitialized.
+          console.warn(
+            `[patchwork] import pass timed out after ${IMPORT_TIMEOUT_MS / 1000}s, asking editor to quit`,
+          );
+          try {
+            importEngine.requestQuit();
+          } catch (error) {
+            console.warn("[patchwork] requestQuit failed:", error);
           }
-        }, QUIT_GRACE_MS);
-      }, IMPORT_TIMEOUT_MS);
+          setTimeout(() => {
+            if (!resolved) {
+              console.warn(
+                "[patchwork] import editor did not exit after quit request, proceeding anyway",
+              );
+              done(0);
+            }
+          }, QUIT_GRACE_MS);
+        }, IMPORT_TIMEOUT_MS);
 
-      console.log("Starting import...");
-      importEngine.start({
-        args: ["--path", PROJECT_PATH, "--rendering-driver", "opengl3", "--display-driver", "headless", "--audio-driver", "Dummy", "-e", "--quit"],
-        persistentDrops: false,
+        console.log("Starting import...");
+        importEngine.start({
+          args: [
+            "--path",
+            PROJECT_PATH,
+            "--rendering-driver",
+            "opengl3",
+            "--display-driver",
+            "headless",
+            "--audio-driver",
+            "Dummy",
+            "-e",
+            "--quit",
+          ],
+          persistentDrops: false,
+        });
+      })
+      .catch((error: unknown) => {
+        console.error("[patchwork] import editor init failed:", error);
+        reject(new ImportError(0, errorLog, String(error)));
       });
-    }).catch((error: unknown) => {
-      console.error("[patchwork] import editor init failed:", error);
-      reject(new ImportError(0, errorLog, String(error)));
-    });
   });
 
   console.timeEnd("import-pass");
@@ -482,7 +488,7 @@ async function launch() {
     emscriptenPoolSize: concurrency,
     godotPoolSize: Math.floor(concurrency / 3),
     onExit: gameDone,
-    onPrintError: addToErrorLog
+    onPrintError: addToErrorLog,
   });
 
   await game.init("godot.editor");
