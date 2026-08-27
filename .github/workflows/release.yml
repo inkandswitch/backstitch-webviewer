@@ -1,0 +1,45 @@
+name: 📦 Build & Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: backstitch-webviewer
+          path: dist/
+          if-no-files-found: error
+          
+      - name: Zip artifact
+        run: |
+          cd dist/
+          zip -r9  ../backstitch-webviewer.zip .
+
+      - name: Release artifact
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            backstitch-webviewer.zip
