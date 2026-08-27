@@ -1,0 +1,3 @@
+{
+  "ignorePatterns": ["dist/**", "*.min.js", "godot.*js", "types/godot/*"]
+}

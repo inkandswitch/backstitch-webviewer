@@ -7,12 +7,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - "main"
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
     branches:
-      - 'main'
+      - "main"
 
 env:
   # The name of the Docker image to be built and pushed to GHCR
@@ -42,7 +42,7 @@ jobs:
 
     runs-on: ${{ matrix.runner }}
     steps:
-      - name: Prepare environment for current platform 
+      - name: Prepare environment for current platform
         # This step sets up the environment for the current platform being built.
         # It replaces the '/' character in the platform name with '-' and sets it as an environment variable.
         # This is useful for naming artifacts and other resources that cannot contain '/'.
@@ -51,7 +51,6 @@ jobs:
         run: |
           platform=${{ matrix.platform }}
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
 
       - name: Checkout
         uses: actions/checkout@v7 # v7.0.1
@@ -123,7 +122,7 @@ jobs:
         # This step uploads the digest file to the GitHub Actions artifact storage.
         # It uses the actions/upload-artifact action to upload the file created in the previous step.
         # The artifact is named digests-${{ env.PLATFORM_PAIR }}, where PLATFORM_PAIR is the platform name with '/' replaced by '-'.
-        # The artifact is retained for 1 day, and if no files are found, it will throw an error.      
+        # The artifact is retained for 1 day, and if no files are found, it will throw an error.
         uses: actions/upload-artifact@v7
         with:
           name: digests-${{ env.PLATFORM_PAIR }}
@@ -151,7 +150,6 @@ jobs:
           path: /tmp/digests
           pattern: digests-*
           merge-multiple: true
-
 
       - name: Docker meta
         # This step generates metadata for the Docker image.
@@ -203,13 +201,13 @@ jobs:
         id: manifest-annotate
         continue-on-error: true
         run: |
-              docker buildx imagetools create \
-                $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-                --annotation='index:org.opencontainers.image.description=${{ github.event.repository.description }}' \
-                --annotation='index:org.opencontainers.image.created=${{ steps.timestamp.outputs.timestamp }}' \
-                --annotation='index:org.opencontainers.image.url=${{ github.event.repository.url }}' \
-                --annotation='index:org.opencontainers.image.source=${{ github.event.repository.url }}' \
-                $(printf '${{ env.GHCR_IMAGE }}@sha256:%s ' *)
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            --annotation='index:org.opencontainers.image.description=${{ github.event.repository.description }}' \
+            --annotation='index:org.opencontainers.image.created=${{ steps.timestamp.outputs.timestamp }}' \
+            --annotation='index:org.opencontainers.image.url=${{ github.event.repository.url }}' \
+            --annotation='index:org.opencontainers.image.source=${{ github.event.repository.url }}' \
+            $(printf '${{ env.GHCR_IMAGE }}@sha256:%s ' *)
 
       - name: Create manifest list and push without annotations
         # This step creates a manifest list for the Docker images built for different platforms.
@@ -219,8 +217,8 @@ jobs:
         if: steps.manifest-annotate.outcome == 'failure'
         working-directory: /tmp/digests
         run: |
-              docker buildx imagetools create  $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-                $(printf '${{ env.GHCR_IMAGE }}@sha256:%s ' *)
+          docker buildx imagetools create  $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.GHCR_IMAGE }}@sha256:%s ' *)
 
       - name: Inspect image
         # This step inspects the created manifest list to verify its contents.

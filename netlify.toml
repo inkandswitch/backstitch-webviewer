@@ -1,16 +1,16 @@
 [build]
-  command = "VITE_BACKSTITCH_API_URL=\"/api\" npm run build"
-  publish = "dist"
+command = "VITE_BACKSTITCH_API_URL=\"/api\" npm run build"
+publish = "dist"
 
 [[headers]]
-  for = "/*"
-  [headers.values]
-    Cross-Origin-Opener-Policy = "same-origin"
-    Cross-Origin-Embedder-Policy = "require-corp"
+for = "/*"
+[headers.values]
+Cross-Origin-Opener-Policy = "same-origin"
+Cross-Origin-Embedder-Policy = "require-corp"
 
 [[redirects]]
-  from = "/api/*"
-  to = "http://24.199.97.236:3000/:splat"
-  status = 200
-  force = true
+from = "/api/*"
+to = "http://24.199.97.236:3000/:splat"
+status = 200
+force = true
 

@@ -1,14 +1,14 @@
 interface ViteTypeOptions {
   // By adding this line, you can make the type of ImportMetaEnv strict
   // to disallow unknown keys.
-  strictImportMetaEnv: unknown,
+  strictImportMetaEnv: unknown;
 }
 
 interface ImportMetaEnv {
-  readonly VITE_BACKSTITCH_API_URL: string
+  readonly VITE_BACKSTITCH_API_URL: string;
   // more env variables...
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv
+  readonly env: ImportMetaEnv;
 }
