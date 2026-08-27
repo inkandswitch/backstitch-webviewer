@@ -4,12 +4,12 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vite",
+    "dev": "cross-env VITE_BACKSTITCH_API_URL=\"https://alpha.backstitch.dev/\" vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest run",
-    "test:watch": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest",
-    "test:idbfs": "cross-env VITE_BACKSTITCH_API_URL=\"http://24.199.97.236:3000/\" vitest run test/idbfs_accessor.test.ts",
+    "test": "cross-env VITE_BACKSTITCH_API_URL=\"https://alpha.backstitch.dev/\" vitest run",
+    "test:watch": "cross-env VITE_BACKSTITCH_API_URL=\"https://alpha.backstitch.dev/\" vitest",
+    "test:idbfs": "cross-env VITE_BACKSTITCH_API_URL=\"https://alpha.backstitch.dev/\" vitest run test/idbfs_accessor.test.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt --write ."
@@ -20,9 +20,11 @@
     "jszip": "^3.10.1"
   },
   "devDependencies": {
+    "@types/node": "^26.4.0",
     "fake-indexeddb": "^6.2.5",
     "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
+    "sirv": "^3.0.2",
     "typescript": "^7.0.2",
     "vite": "^8",
     "vitest": "^4.1.11"
