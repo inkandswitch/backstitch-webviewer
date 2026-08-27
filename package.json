@@ -24,7 +24,6 @@
     "fake-indexeddb": "^6.2.5",
     "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
-    "sirv": "^3.0.2",
     "typescript": "^7.0.2",
     "vite": "^8",
     "vitest": "^4.1.11"
