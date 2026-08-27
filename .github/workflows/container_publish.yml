@@ -1,4 +1,4 @@
-name: 📦 Build and Publish
+name: 📦 Build and Publish Container
 permissions: write-all
 
 # NOTE: Cannibalized from https://github.com/sredevopsorg/multi-arch-docker-github-workflow/blob/main/.github/workflows/multi-build.yaml
