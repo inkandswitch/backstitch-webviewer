@@ -32,33 +32,33 @@ This repo provides a simple Docker image that will write the frontend into a Doc
 
 ```yaml
 services:
-    backstitch-webviewer:
-        # Make sure not to set "restart" on this, since it's a static image
-        # that fills a volume!
-        image: ghcr.io/inkandswitch/backstitch-webviewer:latest
-        environment:
-            # This is the API URL that the frontend will query.
-            # If your Backstitch server is hosted separately,
-            # insert an absolute URL here to the API root.
-            # Alternatively, if the Webviewer is being served from the
-            # server root, you can just set this to "/".
-            BACKSTITCH_API_URL: "https://example.com/"
-        volumes:
-            # This volume will be overwritten to contain the contents 
-            # of /dist on startup.
-            - webviewer:/site
+  backstitch-webviewer:
+    # Make sure not to set "restart" on this, since it's a static image
+    # that fills a volume!
+    image: ghcr.io/inkandswitch/backstitch-webviewer:latest
+    environment:
+      # This is the API URL that the frontend will query.
+      # If your Backstitch server is hosted separately,
+      # insert an absolute URL here to the API root.
+      # Alternatively, if the Webviewer is being served from the
+      # server root, you can just set this to "/".
+      BACKSTITCH_API_URL: "https://example.com/"
+    volumes:
+      # This volume will be overwritten to contain the contents
+      # of the frontend on startup.
+      - webviewer:/site
 
 volumes:
-    webviewer:
+  webviewer:
 ```
 
-This allows to easily pass the desired frontend to the Sync Server. See the [Backstitch Sync Server repository](https://github.com/inkandswitch/backstitch-sync-server) for more details on this configuration. 
+This allows to easily pass the desired frontend to the Sync Server. See the [Backstitch Sync Server repository](https://github.com/inkandswitch/backstitch-sync-server) for more details on this configuration.
 
 ## Without Docker
 
 The sync server is a static site that can be served nearly anywhere that provides a static filesystem server!
 
-Without Docker, you can easily use the frontend release on the [Releases](https://github.com/inkandswitch/backstitch-webviewer/releases) page. 
+Without Docker, you can easily use the frontend release on the [Releases](https://github.com/inkandswitch/backstitch-webviewer/releases) page.
 
 However, you'll need to set the API URL for the intended Backstitch Sync Server manually. In order to do so, edit `config.js` to contain:
 
@@ -68,9 +68,8 @@ window.BACKSTITCH_API_URL = "<YOUR URL HERE>";
 
 See the Docker instructions for information on what to use as your API URL.
 
-
 ## Developing
 
 Contributions are welcome!
 
-For local developer builds, install `node.js` and `npm`, run `npm install`, and `npm run dev` to run a local Vite instance. By default, it will set the API URL to the Alpha Test Server, but this can be overridden with environment variables. See `package.json` for more details. 
+For local developer builds, install `node.js` and `npm`, run `npm install`, and `npm run dev` to run a local Vite instance. By default, it will set the API URL to the Alpha Test Server, but this can be overridden with environment variables. See `package.json` for more details.
