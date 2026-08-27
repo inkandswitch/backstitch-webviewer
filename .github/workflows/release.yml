@@ -31,7 +31,7 @@ jobs:
           name: backstitch-webviewer
           path: dist/
           if-no-files-found: error
-          
+
       - name: Zip artifact
         run: |
           cd dist/
