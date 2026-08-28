@@ -10,7 +10,7 @@ Cross-Origin-Embedder-Policy = "require-corp"
 
 [[redirects]]
 from = "/api/*"
-to = "http://24.199.97.236:3000/:splat"
+to = "https://alpha.backstitch.dev/:splat"
 status = 200
 force = true
 
