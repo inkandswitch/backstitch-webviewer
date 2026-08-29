@@ -212,7 +212,7 @@ function showBranchList(metadata: any) {
 }
 
 function setupBranchPicker(metadata: any, activeBranchId: string) {
-  topBar.style.display = "";
+  topBar.style.display = "flex";
   const branches = sortedBranches(metadata);
 
   for (const branch of branches) {
@@ -322,7 +322,6 @@ async function launch() {
   } else {
     setupBranchPicker(metadata, branchId);
   }
-  topBar.style.display = "flex";
 
   let canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
