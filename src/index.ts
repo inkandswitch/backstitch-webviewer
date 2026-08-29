@@ -212,6 +212,7 @@ function showBranchList(metadata: any) {
 }
 
 function setupBranchPicker(metadata: any, activeBranchId: string) {
+  topBar.style.display = "";
   const branches = sortedBranches(metadata);
 
   for (const branch of branches) {
@@ -235,7 +236,8 @@ function setupBranchPicker(metadata: any, activeBranchId: string) {
 function setupReadonlyTopBar() {
   branchPickerLabel.style.display = "none";
   branchSelect.style.display = "none";
-  setupDownloadButton(() => "shared");
+  branchDownloadButton.style.display = "none";
+  topBar.style.display = "none";
 }
 
 function setupShareButton() {
@@ -259,6 +261,7 @@ function setupShareButton() {
 }
 
 function setupDownloadButton(getBranchLabel: () => string) {
+  branchDownloadButton.style.display = "inline-block";
   branchDownloadButton.addEventListener("click", async () => {
     const originalLabel = branchDownloadButton.textContent || "Download zip";
     branchDownloadButton.disabled = true;
